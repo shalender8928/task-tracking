@@ -13,6 +13,25 @@ This README will guide you on how to set up the project, run the application, an
 
 ---
 
+## Screenshots
+
+**Dashboard Screen**
+![Dashboard Screen](./public/documentation-images/dashboard.png)
+
+**Time Log Detail - Main Screen**
+![Time Log Detail - Main Screen](./public/documentation-images/task-logging-and-validation.png)
+
+**Leave Detail - Main Screen**
+![Leave Detail - Main Screen](./public/documentation-images/leave-apply-and-validation-with-same-day-task.png)
+
+**Test cases Response**
+![Test cases Response](./public/documentation-images/feature-test-cases.png)
+
+**Dark Theme Support**
+![Dark Theme Support](./public/documentation-images/dark-theme-support.png)
+
+---
+
 ## Requirements
 
 - PHP >= 8.1
@@ -90,3 +109,15 @@ This will run only the tests inside `tests/Feature/TimeTrackerTest.php`.
 - No UI/frontend changes are required for this task.
 - All validations are handled via backend logic.
 - You can adjust the test data inside TimeTrackerTest.php if needed for further scenarios.
+
+
+## Links
+
+- Blog：[https://www.codinghelpsolutions.com/](https://www.codinghelpsolutions.com/)
+- GitHub：[https://github.com/shalender8928](https://github.com/shalender8928)
+- LinkedIn：[https://www.linkedin.com/in/shalender8928/](https://www.linkedin.com/in/shalender8928/)
+
+
+## License
+
+laravel-bjyblog is open-sourced software licensed under the MIT license.
