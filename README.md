@@ -45,7 +45,6 @@ This README will guide you on how to set up the project, run the application, an
    ```bash
    cp .env.example .env
    php artisan key:generate
-   php artisan migrate
    ```
 4. **Run Migrations**
    ```bash
