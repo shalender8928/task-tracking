@@ -110,6 +110,10 @@ This will run only the tests inside `tests/Feature/TimeTrackerTest.php`.
 - All validations are handled via backend logic.
 - You can adjust the test data inside TimeTrackerTest.php if needed for further scenarios.
 
+## Author
+
+Shalender Kumar  
+Email: shalender8928@gmail.com
 
 ## Links
 
@@ -120,4 +124,4 @@ This will run only the tests inside `tests/Feature/TimeTrackerTest.php`.
 
 ## License
 
-laravel-bjyblog is open-sourced software licensed under the MIT license.
+task-tracking is open-sourced software licensed under the MIT license.
