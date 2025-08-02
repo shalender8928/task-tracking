@@ -23,15 +23,10 @@ This README will guide you on how to set up the project, run the application, an
 
 
 ## 🛠️ Stack
-- Laravel 11
-- Livewire 3
+- Laravel 12.x
+- Livewire 3.x
 - Tailwind
 - MySQL
-
-
----
-
- applicable)
 
 ---
 
