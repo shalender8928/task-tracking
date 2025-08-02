@@ -113,7 +113,6 @@ This will run only the tests inside `tests/Feature/TimeTrackerTest.php`.
 ## Author
 
 Shalender Kumar  
-Email: shalender8928@gmail.com
 
 ## Links
 
