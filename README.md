@@ -88,17 +88,19 @@ This README will guide you on how to set up the project, run the application, an
 Test cases have been written using Laravel’s built-in PestPHP / PHPUnit testing framework. To execute the tests, follow these steps:
 
 ## Run All Tests:
-Create the `.env.testing` file first and than don't forgot to setup these lins in your `.env.testing` file before executing the fowwing command to make your actual data will not affected.
+Create the `.env.testing` file first and than don't forgot to setup these lins in your `.env.testing` file before executing the following command to make your actual data will not affected.
 
-*DB_CONNECTION=sqlite*
-*DB_DATABASE=:memory:*
+**DB_CONNECTION**
+**DB_DATABASE**
 
 Always keep this `--env=testing` at the end of the `Test` command to execute test on the test database only.
    ```bash
    DB_CONNECTION=sqlite
    DB_DATABASE=:memory:
    ```
+These setting will ensure that the test will run on sqlite database, you can also switch the database with anyother database that you want to use for testing only.
 
+Now, execute the following command to run the test cases.
    ```bash
    php artisan test --env=testing
    ```
