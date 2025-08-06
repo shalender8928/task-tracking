@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use App\Models\Leave;
 use App\Models\TimeTracker as Task;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On; 
@@ -94,14 +93,6 @@ class TimeTracker extends Component
         $this->date = now()->toDateString();
     }
 
-    public function onLeave($date)
-    {
-        return Leave::where('user_id', auth()->id())
-            ->where('start_date', '<=', $date)
-            ->where('end_date', '>=', $date)
-            ->exists();
-    }
-
     public function getTaskList()
     {
         return Task::where('user_id', auth()->id())
@@ -112,11 +103,6 @@ class TimeTracker extends Component
 
     public function render()
     {
-         $taskList = Task::where('user_id', auth()->id())
-            ->orderByDesc('work_date')
-            ->get()
-            ->groupBy('work_date');
-
         return view('livewire.time-tracker',[
             'taskList' => $this->getTaskList(),
         ]);
