@@ -7,16 +7,24 @@ use App\Models\Leave;
 use App\Models\TimeTracker;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On; 
+use Livewire\WithPagination;
 
 class LeaveForm extends Component
 {
+    use WithPagination;
     public $start_date, $end_date;
     public $leaveList = [];
     public $leaveId = null;
+    public int $perPage = 2;
 
     public function mount()
     {
         $this->resetForm();
+    }
+
+    public function updatedPerPage()
+    {
+        $this->resetPage();
     }
 
     public function submit()
@@ -76,12 +84,23 @@ class LeaveForm extends Component
         $this->end_date = null;
     }
 
+    public function getleaveList()
+    {
+        try {
+            return Leave::where('user_id', auth()->id())
+            ->orderBy('start_date')
+            ->paginate($this->perPage);
+
+        } catch (\Exception $e) {
+            $this->dispatch('error', message: 'Failed to load Leaves');
+            return collect();
+        }
+    }
+
     public function render()
     {
-        $leaves = Leave::where('user_id', auth()->id())
-            ->orderBy('start_date')
-            ->get();
-
-        return view('livewire.leave-form', compact('leaves'));
+        return view('livewire.leave-form', [
+            'leaves' => $this->getleaveList()
+        ]);
     }
 }

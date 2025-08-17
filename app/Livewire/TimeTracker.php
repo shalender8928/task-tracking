@@ -6,13 +6,21 @@ use Livewire\Component;
 use App\Models\TimeTracker as Task;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On; 
-use App\Traits\HasTimeCalculations;
+use App\Traits\{HasTimeCalculations, SanitizesNumericInputs};
+use Livewire\WithPagination;
 
 class TimeTracker extends Component
 {
-    use HasTimeCalculations;
+    use HasTimeCalculations, SanitizesNumericInputs, WithPagination;
     public $date, $task_description, $hours, $minutes;
     public $taskId = null;
+    public $numericFields = ['hours', 'minutes']; //will senitize these arguments using the SanitizesNumericInputs Traits.
+    public int $perPage = 2;
+
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
 
     public function mount()
     {
@@ -25,8 +33,8 @@ class TimeTracker extends Component
         $this->validate([
             'date' => 'required|date|before_or_equal:today',
             'task_description' => 'required|max:255',
-            'hours' => ['required', 'integer', 'min:0', 'max:10'],
-            'minutes' => ['required', 'integer', 'min:0', 'max:59']
+            'hours' => ['required', 'numeric', 'min:0', 'max:10'],
+            'minutes' => ['required', 'numeric', 'min:0', 'max:59']
         ]);
 
         if (empty($this->hours) && empty($this->minutes)) {
@@ -93,18 +101,59 @@ class TimeTracker extends Component
         $this->date = now()->toDateString();
     }
 
+    public function getPaginatedWorkDates()
+    {
+        // Get paginated DISTINCT dates (grouped)
+        return Task::where('user_id', auth()->id())
+            ->select('work_date')
+            ->groupBy('work_date')
+            ->orderByDesc('work_date')
+            ->paginate($this->perPage);
+    }
+
     public function getTaskList()
     {
-        return Task::where('user_id', auth()->id())
-            ->orderByDesc('work_date')
-            ->get()
-            ->groupBy('work_date');
+        try {
+            $paginatedDates = $this->getPaginatedWorkDates();
+
+            // Get all tasks for these dates
+            $tasksByDate = Task::where('user_id', auth()->id())
+                ->whereIn('work_date', $paginatedDates->pluck('work_date'))
+                ->orderByDesc('work_date')
+                ->get()
+                ->groupBy('work_date');
+
+            // Calculate totals per date
+            $groupedTasks = $tasksByDate->map(function ($tasks, $date) {
+                $totalHours = $tasks->sum('hours');
+                $totalMinutes = $tasks->sum('minutes');
+
+                // Convert extra minutes to hours
+                $totalHours += intdiv($totalMinutes, 60);
+                $remainingMinutes = $totalMinutes % 60;
+
+                return [
+                    'tasks' => $tasks,
+                    'totalHours' => $totalHours,
+                    'remainingMinutes' => $remainingMinutes,
+                    'date' => $date,
+                ];
+            });
+
+            // Reattach pagination to the grouped results
+            $paginatedDates->setCollection($groupedTasks);
+
+            return $paginatedDates;
+        } catch (\Exception $e) {
+            $this->dispatch('error', message: 'Failed to load tasks');
+            return collect();
+        }
     }
 
     public function render()
     {
         return view('livewire.time-tracker',[
-            'taskList' => $this->getTaskList(),
+            'taskList' => $this->getTaskList()
         ]);
     }
 }
